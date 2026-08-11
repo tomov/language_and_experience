@@ -7,7 +7,7 @@ import time
 
 from pygame import rect
 import numpy as np
-from gym.envs.registration import register
+from gymnasium.envs.registration import register
 from sklearn.neighbors import NearestNeighbors, radius_neighbors_graph
 # import matplotlib.pyplot as plt
 import signal

@@ -124,7 +124,7 @@ class DeterministicGraph(MDPGraph):
 
     def as_transition_matrix(self) -> 'np.ndarray[S,A,S]':
         """ T holds probabilities for (s, a, s')"""
-        T = np.zeros((self.num_states, self.num_actions, self.num_states), dtype=np.float)
+        T = np.zeros((self.num_states, self.num_actions, self.num_states), dtype=float)
 
         state_to_idx = { state: state_i for state_i, state in enumerate(self.graph.keys()) }
         action_to_idx = { action: action_i for action_i, action in enumerate(self.actions) }
@@ -157,7 +157,7 @@ class DeterministicGraph(MDPGraph):
         return state_to_idx
 
     def as_reward_vector(self) -> 'np.ndarray[S]':
-        rewards = np.fromiter((self.reward_graph[s] for s in self.states()), dtype=np.float)
+        rewards = np.fromiter((self.reward_graph[s] for s in self.states()), dtype=float)
         return rewards
 
     def as_networkx_graph(self):

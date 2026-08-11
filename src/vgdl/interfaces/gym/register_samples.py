@@ -1,11 +1,15 @@
-import gym
-from gym.envs.registration import register
+import gymnasium as gym
+from gymnasium.envs.registration import register
 from src.vgdl.interfaces.gym import VGDLEnv
 import os
 
-# Location of sample games
-import pkg_resources
-games_path = pkg_resources.resource_filename('src.vgdl', 'games')
+# Location of sample games, resolved relative to this file so it works without
+# pkg_resources (removed in modern setuptools). The games live at the repo root
+# (../../../../games from this file: interfaces/gym -> vgdl -> src -> repo root).
+games_path = os.path.join(
+    os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(
+        os.path.abspath(__file__))))),
+    'games')
 
 sample_games = [
     'aliens',

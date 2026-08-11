@@ -1,7 +1,10 @@
-from gym import Space
+from gymnasium import Space
 
 class list_space(Space):
     def __init__(self, basespace):
+        # NOTE: intentionally do NOT call super().__init__ -- this is a
+        # placeholder variable-length space; gymnasium's Space.__init__ would
+        # require a concrete shape/dtype we don't have.
         self.basespace = basespace
         self.shape_ = [None] + list(self.basespace.shape)
 

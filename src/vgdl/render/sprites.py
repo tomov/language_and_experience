@@ -1,10 +1,12 @@
 import pygame
 
 from pathlib import Path
-import pkg_resources
+import os
 from collections import defaultdict
 
-sprites_root = Path(pkg_resources.resource_filename('src.vgdl', 'sprites'))
+# src/vgdl/sprites, resolved relative to this file (src/vgdl/render/sprites.py)
+# so it works without pkg_resources (removed in modern setuptools).
+sprites_root = Path(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))) / 'sprites'
 
 class SpriteLibrary:
     default_instance = None

@@ -32,7 +32,7 @@ import sys
 repo_path = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, repo_path)
 
-from gym.envs.registration import register
+from gymnasium.envs.registration import register
 
 from src.game.play_game import play_game
 from src.utils import get_repo_path
