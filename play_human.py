@@ -32,8 +32,33 @@ import sys
 repo_path = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, repo_path)
 
+from gym.envs.registration import register
+
 from src.game.play_game import play_game
-from src.utils import register_game
+from src.utils import get_repo_path
+
+
+def register_game_for_play(game, level=0):
+    """Register a VGDL game for human play.
+
+    Unlike src.utils.register_game, this disables gym's order-enforcing
+    wrapper because src/game/play_game.py calls env.render() before
+    env.reset() (see play_game.py lines 12-13), which gym>=0.26 forbids
+    by default.
+    """
+    repo_path = get_repo_path()
+    game_path = os.path.join(repo_path, "games", f"{game}_v0")
+    register(
+        id=f"{game}-v0",
+        entry_point="src.vgdl.interfaces.gym:VGDLEnv",
+        order_enforce=False,
+        kwargs={
+            "game_file": os.path.join(game_path, game + ".txt"),
+            "level_file": os.path.join(game_path, game + f"_lvl{level}.txt"),
+            "obs_type": "objects",
+            "block_size": 50,
+        },
+    )
 
 AVAILABLE_GAMES = [
     "avoidGeorge",
@@ -103,8 +128,10 @@ def main():
     print(f"  Q or ESC: Quit")
     print(f"{'='*60}\n")
 
-    # Register the game
-    game_id = register_game(args.game, level=args.level, fast=False)
+    # Register the game (order enforcing disabled so play_game.py's
+    # render-before-reset works with gym 0.26)
+    register_game_for_play(args.game, level=args.level)
+    game_id = f"{args.game}-v0"
 
     # Play the game
     play_game(

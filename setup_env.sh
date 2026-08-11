@@ -19,24 +19,34 @@ fi
 echo "📦 Creating conda environment 'language_and_experience' with Python 3.10..."
 conda create -n language_and_experience python=3.10 -y
 
-# Activate environment
+# Make the env ignore ~/.local user-site packages, otherwise a global
+# user install shadows the conda env and pip skips "already satisfied" deps.
+echo ""
+echo "🔧 Isolating env from user-site packages..."
+conda env config vars set PYTHONNOUSERSITE=1 -n language_and_experience
+
+# Activate environment (re-source so PYTHONNOUSERSITE takes effect)
 echo ""
 echo "🔄 Activating environment..."
 source "$(conda info --base)/etc/profile.d/conda.sh"
 conda activate language_and_experience
 
-# Install core dependencies for human play
+# Install core dependencies for human play.
+# Pins:
+#   numpy<2       - gym 0.26.2 does not support NumPy 2.0
+#   setuptools<81 - vgdl's gym interface imports pkg_resources, dropped in 81+
 echo ""
 echo "📥 Installing core dependencies (for human play)..."
 pip install --index-url https://pypi.org/simple \
+    "setuptools<81" \
+    "numpy<2" \
     pygame \
     gym==0.26.2 \
     scikit-learn \
     scipy \
     matplotlib \
     pandas \
-    Pillow \
-    numpy
+    Pillow
 
 echo ""
 echo "✅ Core setup complete!"
